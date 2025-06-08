@@ -1,118 +1,122 @@
 # dsml
 
-A hands-on collection of **Data Science** and **Machine Learning** implementations **from scratch** $\text{no TensorFlow, no PyTorch}$ — just pure Python and NumPy. Perfect for learners who want to **deeply understand** how machine learning models work **under the hood**.
+A hands-on repository of **Data Science** and **Machine Learning** models built entirely **from scratch** — no TensorFlow, no PyTorch — just pure Python 🐍 and NumPy 📊. Ideal for learners who want to dig into the **core mechanics** of how machine learning actually works.
 
 ---
 
-## \U0001F4DA Table of Contents
+## 📚 Table of Contents
 
-1. [Overview](#overview)
-2. [Features](#features)
-3. [Mathematical Foundations](#mathematical-foundations)
-4. [Implementation Details](#implementation-details)
-5. [Installation](#installation)
-6. [Usage](#usage)
-7. [Sample Data](#sample-data)
-8. [Results](#results)
-9. [Extending](#extending)
-10. [Project Structure](#project-structure)
-11. [License](#license)
-12. [Author](#author)
-
----
-
-## \U0001F31F Overview
-
-This repository builds a **fully configurable feedforward neural network** from scratch. By skipping high-level ML libraries, users will:
-
-* Understand matrix calculus & vectorization
-* Implement the full training pipeline manually
-* Gain insight into how gradients propagate
-* See effects of architectural choices in real-time
+1. [🌟 Overview](#-overview)
+2. [🔍 Features](#-features)
+3. [🧠 Mathematical Foundations](#-mathematical-foundations)
+4. [⚙️ Implementation Details](#-implementation-details)
+5. [🚀 Installation](#-installation)
+6. [🎯 Usage](#-usage)
+7. [🗂 Sample Data](#-sample-data)
+8. [📈 Results](#-results)
+9. [🛠 Extending](#-extending)
+10. [📁 Project Structure](#-project-structure)
+11. [📜 License](#-license)
+12. [✍️ Author](#️-author)
 
 ---
 
-## \U0001F50D Features
+## 🌟 Overview
 
-* Multi-layer, fully-connected architecture
-* Activation functions: Sigmoid, Tanh, ReLU
-* Loss functions: MSE, Binary Cross-Entropy
-* Full-batch gradient descent
-* Visual logging of training loss
-* Clean and modular NumPy codebase
+This repo builds a **configurable feedforward neural network** from the ground up. By avoiding high-level libraries, you’ll:
+
+* Understand matrix calculus & vectorized ops 📐
+* Manually code each training step 🧪
+* Observe how gradients propagate 🔁
+* Experiment with layers and activations 🔧
 
 ---
 
-## \U0001F4A1 Mathematical Foundations
+## 🔍 Features
 
-### Structure of a Neural Network
+* ✅ Fully-connected multi-layer architecture
+* ⚡ Activation functions: Sigmoid, Tanh, ReLU
+* 💥 Loss functions: MSE, Binary Cross-Entropy
+* 🌀 Full-batch gradient descent optimizer
+* 📊 Visual loss tracking via `matplotlib`
+* 💡 Clean, modular NumPy code
 
-A feedforward neural network consists of \$L\$ layers. Each layer \$\ell\$ performs a linear transformation followed by a non-linear activation:
+---
+
+## 🧠 Mathematical Foundations
+
+### 🧱 Neural Network Layers
+
+Each layer $\ell$ performs:
 
 $$
-Z^{[\ell]} = W^{[\ell]} A^{[\ell-1]} + b^{[\ell]}\\
+Z^{[\ell]} = W^{[\ell]} A^{[\ell-1]} + b^{[\ell]} \\
 A^{[\ell]} = g(Z^{[\ell]})
 $$
 
 Where:
 
-* \$W^{\[\ell]} \in \mathbb{R}^{n\_\ell \times n\_{\ell-1}}\$
-* \$b^{\[\ell]} \in \mathbb{R}^{n\_\ell}\$
-* \$g\$ is the activation function
+* $W^{[\ell]}$ = weight matrix
+* $b^{[\ell]}$ = bias vector
+* $g$ = activation function
 
-### Forward Propagation
+### ➕ Forward Propagation
 
-The output layer computes \$\hat{Y} = A^{\[L]}\$, where \$L\$ is the total number of layers.
+Final prediction:
 
-### Loss Functions
+$$
+\hat{Y} = A^{[L]}
+$$
 
-**Mean Squared Error (MSE)**:
+### ❌ Loss Functions
+
+**Mean Squared Error (MSE):**
 
 $$
 \mathcal{L}_{\text{MSE}} = \frac{1}{m} \sum_{i=1}^m (y^{(i)} - \hat{y}^{(i)})^2
 $$
 
-**Binary Cross-Entropy**:
+**Binary Cross-Entropy (BCE):**
 
 $$
 \mathcal{L}_{\text{BCE}} = -\frac{1}{m} \sum_{i=1}^m \left[ y^{(i)} \log(\hat{y}^{(i)}) + (1 - y^{(i)}) \log(1 - \hat{y}^{(i)}) \right]
 $$
 
-### Backpropagation
+### 🔁 Backpropagation
 
-Uses the chain rule to compute gradients layer by layer:
+Uses chain rule to compute gradients:
 
 $$
-\frac{\partial \mathcal{L}}{\partial W^{[\ell]}} = \delta^{[\ell]} {A^{[\ell-1]}}^T\\
+\frac{\partial \mathcal{L}}{\partial W^{[\ell]}} = \delta^{[\ell]} {A^{[\ell-1]}}^T \\
 \frac{\partial \mathcal{L}}{\partial b^{[\ell]}} = \sum_{i=1}^{m} \delta^{[\ell](i)}
 $$
 
-The error term \$\delta\$ is computed recursively:
+Error is computed recursively:
 
 $$
 \delta^{[\ell]} = (W^{[\ell+1]})^T \delta^{[\ell+1]} \circ g'(Z^{[\ell]})
 $$
 
-### Gradient Descent
+### 📉 Gradient Descent
 
-Weights and biases update as:
+Parameter update rule:
 
 $$
-W^{[\ell]} \leftarrow W^{[\ell]} - \alpha \frac{\partial \mathcal{L}}{\partial W^{[\ell]}}\\
+W^{[\ell]} \leftarrow W^{[\ell]} - \alpha \frac{\partial \mathcal{L}}{\partial W^{[\ell]}} \\
 b^{[\ell]} \leftarrow b^{[\ell]} - \alpha \frac{\partial \mathcal{L}}{\partial b^{[\ell]}}
 $$
 
 ---
 
-## \u2699 Implementation Details
+## ⚙️ Implementation Details
 
-### Initialization
+### 🧪 Initialization Methods
 
-* Random: \$\mathcal{N}(0,1)\$
-* Xavier: \$\sqrt{\frac{1}{n\_{\text{in}}}}\$
-* He: \$\sqrt{\frac{2}{n\_{\text{in}}}}\$
+* **Random**: $\mathcal{N}(0,1)$
+* **Xavier**: $\sqrt{\frac{1}{n_{in}}}$
+* **He**: $\sqrt{\frac{2}{n_{in}}}$
 
-### Training Loop
+### 🔄 Training Loop
 
 ```python
 for epoch in range(epochs):
@@ -128,7 +132,7 @@ for epoch in range(epochs):
 
 ---
 
-## \U0001F680 Installation
+## 🚀 Installation
 
 ```bash
 git clone https://github.com/humair-m/dsml.git
@@ -138,22 +142,24 @@ source venv/bin/activate
 pip install -r requirements.txt
 ```
 
-**requirements.txt:**
+**`requirements.txt`**
 
-```text
+```
 numpy
 matplotlib
 ```
 
 ---
 
-## \U0001F3AF Usage
+## 🎯 Usage
+
+To run the main script:
 
 ```bash
 python "Neural Network from Scratch.py"
 ```
 
-To configure:
+To modify configuration:
 
 ```python
 layer_sizes = [2, 4, 1]
@@ -162,7 +168,7 @@ learning_rate = 0.01
 epochs = 1000
 ```
 
-With CLI args (requires `argparse`):
+Run with CLI arguments (if using `argparse`):
 
 ```bash
 python script.py --layers 2 4 1 --activations relu sigmoid --lr 0.01 --epochs 500
@@ -170,11 +176,11 @@ python script.py --layers 2 4 1 --activations relu sigmoid --lr 0.01 --epochs 50
 
 ---
 
-## \U0001F5C2 Sample Data
+## 🗂 Sample Data
 
-By default uses `sklearn.datasets.make_circles` for binary classification.
+Uses `make_circles` from `sklearn.datasets` by default.
 
-You can also use `img_.pkl`:
+Optionally, load your own dataset like `img_.pkl`:
 
 ```python
 import pickle
@@ -184,7 +190,7 @@ X = (X - X.mean(axis=1, keepdims=True)) / X.std(axis=1, keepdims=True)
 
 ---
 
-## \U0001F4C8 Results
+## 📈 Results
 
 ```text
 Epoch 1/1000 — Loss: 0.6932
@@ -192,20 +198,20 @@ Epoch 500/1000 — Loss: 0.0513
 Epoch 1000/1000 — Loss: 0.0189
 ```
 
-A loss curve is saved as `loss_curve.png`.
+🖼 A loss curve is saved as `loss_curve.png`
 
 ---
 
-## \U0001F527 Extending
+## 🛠 Extending
 
-* Implement Adam, RMSProp, Momentum
-* Mini-batch or stochastic training
-* Add Dropout or BatchNorm
-* Multiclass support: Softmax + CrossEntropy
+* Add optimizers: Adam, RMSProp, Momentum
+* Implement mini-batch or stochastic training
+* Use regularization: Dropout, BatchNorm
+* Add multiclass support via Softmax + CrossEntropy
 
 ---
 
-## \U0001F4C1 Project Structure
+## 📁 Project Structure
 
 ```
 dsml/
@@ -219,9 +225,9 @@ dsml/
 
 ---
 
-## \U0001F4DC License
+## 📜 License
 
-MIT License — see [LICENSE](LICENSE) for full text.
+MIT License — see [LICENSE](LICENSE) for full terms.
 
 ---
 
@@ -229,4 +235,4 @@ MIT License — see [LICENSE](LICENSE) for full text.
 
 **Humair M**
 GitHub: [@humair-m](https://github.com/humair-m)
-Project started: June 2025
+📅 Project started: June 2025
